@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "3fdd49a69ea04ac971bc";
+/******/ 	var hotCurrentHash = "b4ac798898e9061cb7d3";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -986,14 +986,14 @@
   
   const TYPECOLOR = [['#7bd0ff', '#F38181'], ['#e8ec8b', '#57cc9d'], ['#EAFFD0', '#88A6E5'], ['#ffb077', '#b0cadb']];
   
-  const init = () => {
+  const init = function () {
     const typeElem = document.getElementsByClassName('type')[0];
     const funTxt = document.getElementById('sbttl2');
     const COLORCOUNT = TYPECOLOR.length;
     const dropdowns = document.getElementsByTagName('select');
   
     for (let i = 0; i < dropdowns.length; i += 1) {
-      dropdowns[i].onchange = e => {
+      dropdowns[i].onchange = function (e) {
         window.location.href = e.target.value;
       };
     }
@@ -1002,7 +1002,7 @@
       stringsElement: document.getElementById('typed-strings'),
       typeSpeed: 70,
       loop: true,
-      preStringTyped: index => {
+      preStringTyped: function (index) {
         const typeCurosr = document.getElementsByClassName('typed-cursor')[0];
         typeCurosr.style.color = TYPECOLOR[index % COLORCOUNT][0];
         typeElem.style.color = TYPECOLOR[index % COLORCOUNT][0];
@@ -1011,7 +1011,7 @@
     });
   };
   
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', function () {
     init();
   });
   
@@ -1215,14 +1215,14 @@
   const step = lazyloadConfig[pathname];
   let stepIndex = 0;
   
-  const setTime = () => {
+  const setTime = function () {
     const now = new Date();
     const dt = now.toDateString();
     const timeElem = document.getElementsByClassName('updateTxt')[0];
     timeElem.innerText = `Last Update:  ${dt}`;
   };
   
-  const setImg = (start, end) => {
+  const setImg = function (start, end) {
     for (let j = start; j < end; j += 1) {
       const d1 = list[j];
       const {
@@ -1238,7 +1238,7 @@
     }
   };
   
-  const debounceLoadImage = Object(_util__WEBPACK_IMPORTED_MODULE_2__["debounce"])(() => {
+  const debounceLoadImage = Object(_util__WEBPACK_IMPORTED_MODULE_2__["debounce"])(function () {
     setImg(step[stepIndex], step[1 + stepIndex++]);
   
     if (step[stepIndex] === len) {
@@ -1316,14 +1316,14 @@
   "use strict";
   __webpack_require__.r(__webpack_exports__);
   /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "debounce", function() { return debounce; });
-  const debounce = (func, wait) => {
+  const debounce = function (func, wait) {
     let timeout;
     return function () {
       // must use function notation
       const context = this,
             args = arguments;
   
-      const later = () => {
+      const later = function () {
         timeout = null;
       };
   
