@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Price History Chart</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        .tooltip {
+            position: absolute;
+            text-align: center;
+            width: auto;
+            height: auto;
+            padding: 8px;
+            font: 12px sans-serif;
+            background: lightsteelblue;
+            border: 0;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <svg width="800" height="500"></svg>
+    <script>
+        // Example data
+        const data = [
+            {price: 100, startDate: 1622520000000, endDate: 1625108400000},
+            {price: 150, startDate: 1625108400000, endDate: 1627786800000},
+            {price: 200, startDate: 1627786800000, endDate: 1630465200000},
+            {price: 250, startDate: 1630465200000, endDate: 1633057200000},
+        ];
+
+        const svg = d3.select("svg"),
+              margin = {top: 20, right: 30, bottom: 30, left: 40},
+              width = +svg.attr("width") - margin.left - margin.right,
+              height = +svg.attr("height") - margin.top - margin.bottom;
+
+        const x = d3.scaleTime()
+                    .domain([d3.min(data, d => d.startDate), d3.max(data, d => d.endDate)])
+                    .range([0, width]);
+
+        const y = d3.scaleLinear()
+                    .domain([0, d3.max(data, d => d.price)])
+                    .nice()
+                    .range([height, 0]);
+
+        const xAxis = d3.axisBottom(x).tickFormat(d3.timeFormat("%Y-%m-%d"));
+        const yAxis = d3.axisLeft(y);
+
+        const g = svg.append("g")
+                     .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        g.append("g")
+         .attr("class", "x axis")
+         .attr("transform", `translate(0,${height})`)
+         .call(xAxis)
+         .selectAll("text")
+         .attr("transform", "rotate(-45)")
+         .style("text-anchor", "end");
+
+        g.append("g")
+         .attr("class", "y axis")
+         .call(yAxis);
+
+        // Add tooltip div
+        const tooltip = d3.select("body").append("div")
+                          .attr("class", "tooltip")
+                          .style("opacity", 0);
+
+        // Draw horizontal lines for each price event
+        g.selectAll(".price-line")
+         .data(data)
+         .enter().append("line")
+         .attr("class", "price-line")
+         .attr("x1", d => x(d.startDate))
+         .attr("y1", d => y(d.price))
+         .attr("x2", d => x(d.endDate))
+         .attr("y2", d => y(d.price))
+         .attr("stroke", "steelblue")
+         .attr("stroke-width", 8)  // Thicker lines
+         .on("mouseover", function(event, d) {
+             tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+             tooltip.html(`Price: $${d.price}<br>Start: ${new Date(d.startDate).toLocaleDateString()}<br>End: ${new Date(d.endDate).toLocaleDateString()}`)
+                    .style("left", (event.pageX + 5) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+         })
+         .on("mouseout", function(d) {
+             tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+         });
+
+        // Draw vertical dotted lines at the start and end dates
+        g.selectAll(".dotted-line-start")
+         .data(data)
+         .enter().append("line")
+         .attr("class", "dotted-line")
+         .attr("x1", d => x(d.startDate))
+         .attr("y1", d => y(d.price))
+         .attr("x2", d => x(d.startDate))
+         .attr("y2", height)
+         .attr("stroke", "black")
+         .attr("stroke-dasharray", "4,4");
+
+        g.selectAll(".dotted-line-end")
+         .data(data)
+         .enter().append("line")
+         .attr("class", "dotted-line")
+         .attr("x1", d => x(d.endDate))
+         .attr("y1", d => y(d.price))
+         .attr("x2", d => x(d.endDate))
+         .attr("y2", height)
+         .attr("stroke", "black")
+         .attr("stroke-dasharray", "4,4");
+    </script>
+</body>
+</html>
