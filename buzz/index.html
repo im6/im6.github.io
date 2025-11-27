@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buzz 3D</title>
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+  <style>
+    body { margin: 0; }
+    model-viewer {
+      width: 100vw;
+      height: 100vh;
+      background-color: #eee;
+    }
+  </style>
+</head>
+<body>
+
+  <model-viewer 
+    src="./buzz.glb"
+    camera-controls
+    disable-zoom
+    auto-rotate
+    camera-orbit="25deg 90deg auto">
+  </model-viewer>
+
+</body>
+</html>
